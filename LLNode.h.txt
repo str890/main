@@ -1,0 +1,27 @@
+#pragma once
+template <class T>
+class LLNode {
+public:
+	explicit LLNode(const T& val) {
+		data = val;
+		next = NULL;
+	}
+
+	LLNode<T>* getNext() const { return next; }
+
+	T getData() { return data; }
+
+	void setNext(LLNode<T>* nextPtr) { next = nextPtr; }
+
+	void setData(const T& val) { data = val; }
+	
+	std::string toString() {
+		std::ostringstream convert;
+		convert << data; 
+		return convert.str();
+	}
+
+private:
+	T data;
+	LLNode<T>* next;
+};

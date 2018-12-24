@@ -1,0 +1,91 @@
+#pragma once
+class Expression {
+public:
+	explicit Expression(std::string id) { infixexpr = id; }
+	std::string infixExpression() { return infixexpr; }
+
+	std::string postfixExpression() {
+		std::string returnString = "";
+		Stack<char> exprStack;
+		exprStack.push('(');
+		infixexpr += ')';
+
+		for (int i = 0; i < (int)infixexpr.length(); i++) {
+			if (infixexpr[i] >= 'a' && infixexpr[i] <= 'z') {
+				returnString += infixexpr[i];
+			}
+			else if (infixexpr[i] == '+' || infixexpr[i] == '-') {
+				while (exprStack.peekTop() == '+' || exprStack.peekTop() == '-' || exprStack.peekTop() == '*' || exprStack.peekTop() == '/') {
+					returnString += exprStack.peekTop();
+					exprStack.pop();
+				}
+				exprStack.push(infixexpr[i]);
+			}
+			else if (infixexpr[i] == '*' || infixexpr[i] == '/') {
+				while (exprStack.peekTop() == '*' || exprStack.peekTop() == '/') {
+					returnString += exprStack.peekTop();
+					exprStack.pop();
+				}
+				exprStack.push(infixexpr[i]);
+			}
+			else if (infixexpr[i] == '(') {
+				exprStack.push('(');
+			}
+			else if (infixexpr[i] == ')') {
+				while (exprStack.peekTop() != '(') {
+					returnString += exprStack.peekTop();
+					exprStack.pop();
+				}
+				exprStack.pop();
+			}
+		}
+		infixexpr.pop_back();
+		return returnString;
+	}
+
+	int evaluateExpression(int varvals[]) {
+		Stack<int> evalStack;
+		std::string post = postfixExpression();
+		for (int i = 0; i < (int)(post.length()); i++) {
+			if (post[i] >= 'a' && post[i] <= 'z')
+			{
+				evalStack.push(varvals[post[i] - 'a']);
+			}
+			else if (post[i] == '+') {
+				int temp1 = evalStack.peekTop();
+				evalStack.pop();
+				int temp2 = evalStack.peekTop();
+				evalStack.pop();
+				temp1 += temp2;
+				evalStack.push(temp1);
+			}
+			else if (post[i] == '-') {
+				int temp1 = evalStack.peekTop();
+				evalStack.pop();
+				int temp2 = evalStack.peekTop();
+				evalStack.pop();
+				temp2 -= temp1;
+				evalStack.push(temp2);
+			}
+			else if (post[i] == '*') {
+				int temp1 = evalStack.peekTop();
+				evalStack.pop();
+				int temp2 = evalStack.peekTop();
+				evalStack.pop();
+				temp1 *= temp2;
+				evalStack.push(temp1);
+			}
+			else if (post[i] == '/') {
+				int temp1 = evalStack.peekTop();
+				evalStack.pop();
+				int temp2 = evalStack.peekTop();
+				evalStack.pop();
+				temp2 /= temp1;
+				evalStack.push(temp2);
+			}
+		}
+		return evalStack.peekTop();
+	}
+private:
+	std::string infixexpr;
+};

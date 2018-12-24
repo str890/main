@@ -1,0 +1,23 @@
+#pragma once
+template <class T>
+class Stack {
+public:
+	Stack() {}
+
+	bool isEmpty() { return top.isEmpty(); }
+
+	void push(T val) { 
+		top.insertFirst(new LLNode<T>(val));
+	}
+
+	void pop() { top.deleteFirst(); }
+
+	T peekTop() { return top.getFirst(); }
+
+	std::string const toString() {
+		return top.toString();
+	}
+
+private:
+	LinkedList<T> top;
+};
